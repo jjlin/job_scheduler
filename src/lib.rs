@@ -1,3 +1,7 @@
+#![forbid(unsafe_code)]
+#![warn(rust_2018_idioms)]
+#![warn(rust_2021_compatibility)]
+
 //! # JobScheduler
 //!
 //! A simple cron-like job scheduling library for Rust.
@@ -37,7 +41,6 @@
 //! A simple usage example:
 //!
 //! ```rust,ignore
-//! extern crate job_scheduler;
 //! use job_scheduler::{JobScheduler, Job};
 //! use std::time::Duration;
 //!
@@ -56,10 +59,6 @@
 //! }
 //! ```
 
-extern crate chrono;
-extern crate cron;
-extern crate uuid;
-
 use chrono::{offset, DateTime, Duration, Utc};
 pub use cron::Schedule;
 pub use uuid::Uuid;
@@ -67,7 +66,7 @@ pub use uuid::Uuid;
 /// A schedulable `Job`.
 pub struct Job<'a> {
     schedule: Schedule,
-    run: Box<(FnMut() -> ()) + 'a>,
+    run: Box<dyn (FnMut()) + 'a>,
     last_tick: Option<DateTime<Utc>>,
     limit_missed_runs: usize,
     job_id: Uuid,
@@ -85,7 +84,7 @@ impl<'a> Job<'a> {
     pub fn new<T>(schedule: Schedule, run: T) -> Job<'a>
     where
         T: 'a,
-        T: FnMut() -> (),
+        T: FnMut(),
     {
         Job {
             schedule,
@@ -195,8 +194,8 @@ impl<'a> JobScheduler<'a> {
             }
         }
 
-        if found_index.is_some() {
-            self.jobs.remove(found_index.unwrap());
+        if let Some(index) = found_index {
+            self.jobs.remove(index);
         }
 
         found_index.is_some()
@@ -213,7 +212,7 @@ impl<'a> JobScheduler<'a> {
     /// }
     /// ```
     pub fn tick(&mut self) {
-        for mut job in &mut self.jobs {
+        for job in &mut self.jobs {
             job.tick();
         }
     }
