@@ -1,4 +1,4 @@
-use job_scheduler::{Job, JobScheduler};
+use job_scheduler_ng::{Job, JobScheduler};
 use std::time::Duration;
 
 fn main() {
@@ -15,6 +15,7 @@ fn main() {
         println!("{:?} - I get executed every 4 seconds!", chrono::Utc::now());
     }));
 
+    println!("{:?} - Starting loop", chrono::Utc::now());
     loop {
         sched.tick();
 

@@ -8,11 +8,11 @@
 //!
 //! ## Usage
 //!
-//! Be sure to add the job_scheduler crate to your `Cargo.toml`:
+//! Be sure to add the job_scheduler_ng crate to your `Cargo.toml`:
 //!
 //! ```toml
 //! [dependencies]
-//! job_scheduler = "*"
+//! job_scheduler_ng = "*"
 //! ```
 //!
 //! Creating a schedule for a job is done using the `FromStr` impl for the
@@ -41,7 +41,7 @@
 //! A simple usage example:
 //!
 //! ```rust,ignore
-//! use job_scheduler::{JobScheduler, Job};
+//! use job_scheduler_ng::{JobScheduler, Job};
 //! use std::time::Duration;
 //!
 //! fn main() {

@@ -1,4 +1,4 @@
-use job_scheduler::{Job, JobScheduler};
+use job_scheduler_ng::{Job, JobScheduler};
 use std::time::Duration;
 
 #[tokio::main]
@@ -42,6 +42,7 @@ async fn init_scheduler() {
                 runtime.spawn(test_job_every_eight());
             }));
 
+            println!("{:?} - Starting loop", chrono::Utc::now());
             loop {
                 sched.tick();
                 runtime.block_on(async move {
