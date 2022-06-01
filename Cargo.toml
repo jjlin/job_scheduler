@@ -1,6 +1,6 @@
 [package]
 name = "job_scheduler_ng"
-version = "2.0.0"
+version = "2.0.1"
 authors = ["Mathijs van Veluw <black.dex@gmail.com>"]
 description = "A simple cron-like job scheduling library for Rust (Updated since 2022)."
 
@@ -17,9 +17,9 @@ categories = ["date-and-time"]
 edition = "2021"
 
 [dependencies]
-cron = "~0.11"
+cron = "0.11"
 chrono = { version = "~0.4", default-features = false, features = ["clock"] }
-uuid = { version = "~1.0", features = ["v4"] }
+uuid = { version = "1", features = ["v4"] }
 
 [dev-dependencies]
 tokio = { version = ">=1.18", features = ["macros", "time", "rt-multi-thread"] }

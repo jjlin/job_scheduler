@@ -1,17 +1,20 @@
 # JobScheduler
-[![](https://docs.rs/job_scheduler/badge.svg)](https://docs.rs/job_scheduler) [![](https://img.shields.io/crates/v/job_scheduler.svg)](https://crates.io/crates/job_scheduler) [![](https://travis-ci.org/lholden/job_scheduler.svg?branch=master)](https://travis-ci.org/lholden/job_scheduler)
+[![](https://docs.rs/job_scheduler_ng/badge.svg)](https://docs.rs/job_scheduler_ng) [![](https://img.shields.io/crates/v/job_scheduler_ng.svg)](https://crates.io/crates/job_scheduler_ng) [![](https://deps.rs/repo/github/BlackDex/job_scheduler/status.svg)](https://deps.rs/repo/github/BlackDex/job_scheduler)
 
 A simple cron-like job scheduling library for Rust.
 
+Forked from https://github.com/lholden/job_scheduler, thanks @lholden!
+This is a fork which i try to maintaine and maybe even improve where needed.
+
 ## Usage
 
-Please see the [Documentation](https://docs.rs/job_scheduler/) for more details.
+Please see the [Documentation](https://docs.rs/job_scheduler_ng/) for more details.
 
-Be sure to add the job_scheduler crate to your `Cargo.toml`:
+Be sure to add the job_scheduler_ng crate to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-job_scheduler = "*"
+job_scheduler_ng = "*"
 ```
 
 Creating a schedule for a job is done using the `FromStr` impl for the
@@ -40,8 +43,8 @@ schedule of `0 0 6 * * Sun,Sat` would execute at 6am on Sunday and Saturday.
 A simple usage example:
 
 ```rust
-extern crate job_scheduler;
-use job_scheduler::{JobScheduler, Job};
+extern crate job_scheduler_ng;
+use job_scheduler_ng::{JobScheduler, Job};
 use std::time::Duration;
 
 fn main() {
