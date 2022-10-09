@@ -6,6 +6,14 @@ A simple cron-like job scheduling library for Rust.
 Forked from https://github.com/lholden/job_scheduler, thanks @lholden!
 This is a fork which i try to maintaine and maybe even improve where needed.
 
+
+## Updates
+
+**2022-10-09 (v2.0.2):**
+ - Updated cron to v0.12.0
+ - Set chrono v0.4.20 as minimum version to mitigate a know CVE.
+
+
 ## Usage
 
 Please see the [Documentation](https://docs.rs/job_scheduler_ng/) for more details.
