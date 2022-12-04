@@ -66,7 +66,7 @@ pub use uuid::Uuid;
 /// A schedulable `Job`.
 pub struct Job<'a> {
     schedule: Schedule,
-    run: Box<dyn (FnMut()) + Send + Sync + 'a>,
+    run: Box<dyn (FnMut()) + Send + 'a>,
     last_tick: Option<DateTime<Utc>>,
     limit_missed_runs: usize,
     job_id: Uuid,
@@ -85,7 +85,7 @@ impl<'a> Job<'a> {
     where
         T: 'a,
         T: FnMut(),
-        T: FnMut() + Send + Sync,
+        T: FnMut() + Send,
     {
         Job {
             schedule,
