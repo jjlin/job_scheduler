@@ -9,7 +9,7 @@ This is a fork which i try to maintain and maybe even improve where needed.
 
 ## Updates
 
-**2022-10-09 (v2.0.3):**
+**2022-12-10 (v2.0.3):**
  - Don't require Sync trait for job function (PR #1 - Thanks @mikel1703)
  - Added two other examples. One using threading, and one also using MPSC.
  - Added some clippy checks
