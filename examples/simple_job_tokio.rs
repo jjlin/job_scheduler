@@ -17,7 +17,7 @@ async fn init_scheduler() {
     let runtime = tokio::runtime::Runtime::new().unwrap();
 
     std::thread::Builder::new()
-        .name("job-scheduler".to_string())
+        .name(String::from("job-scheduler"))
         .spawn(move || {
             let _runtime_guard = runtime.enter();
 
@@ -50,7 +50,7 @@ async fn init_scheduler() {
                 });
             }
         })
-        .expect("Error spawing job-scheduler thread");
+        .expect("Error spawning job-scheduler thread");
 }
 
 async fn test_job_every_five() {

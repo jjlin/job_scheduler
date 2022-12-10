@@ -4,10 +4,16 @@
 A simple cron-like job scheduling library for Rust.
 
 Forked from https://github.com/lholden/job_scheduler, thanks @lholden!
-This is a fork which i try to maintaine and maybe even improve where needed.
+This is a fork which i try to maintain and maybe even improve where needed.
 
 
 ## Updates
+
+**2022-10-09 (v2.0.3):**
+ - Don't require Sync trait for job function (PR #1 - Thanks @mikel1703)
+ - Added two other examples. One using threading, and one also using MPSC.
+ - Added some clippy checks
+ - Fixed some spelling errors
 
 **2022-10-09 (v2.0.2):**
  - Updated cron to v0.12.0
