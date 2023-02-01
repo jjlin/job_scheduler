@@ -9,8 +9,15 @@ This is a fork which i try to maintain and maybe even improve where needed.
 
 ## Updates
 
+**2023-02-01 (v2.0.4):**
+ - Validated uuid v1.3.0 works
+ - Used miri to check examples
+   Added an `std::process::exit(0);` to produce a clean exit.
+ - Set MSRV to v1.56.1
+ - Updated dev dependency of tokio to v1.25.0 or higher
+
 **2022-12-10 (v2.0.3):**
- - Don't require Sync trait for job function (PR #1 - Thanks @mikel1703)
+ - Don't require Sync trait for job function (PR [#1](https://github.com/BlackDex/job_scheduler/pull/1) - Thanks @mikel1703)
  - Added two other examples. One using threading, and one also using MPSC.
  - Added some clippy checks
  - Fixed some spelling errors

@@ -64,4 +64,5 @@ fn main() {
     println!("Waiting for {wait_seconds} seconds!");
     std::thread::sleep(Duration::from_secs(wait_seconds));
     println!("Finished. Goodby!");
+    std::process::exit(0);
 }

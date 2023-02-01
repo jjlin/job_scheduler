@@ -10,6 +10,7 @@ async fn main() {
     println!("Waiting for {wait_seconds} seconds!");
     tokio::time::sleep(Duration::from_secs(wait_seconds)).await;
     println!("Finished. Goodby!");
+    std::process::exit(0);
 }
 
 async fn init_scheduler() {
