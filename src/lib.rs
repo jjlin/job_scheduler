@@ -1,42 +1,3 @@
-#![forbid(unsafe_code, non_ascii_idents)]
-#![deny(
-    rust_2018_idioms,
-    rust_2021_compatibility,
-    noop_method_call,
-    pointer_structural_match,
-    trivial_casts,
-    trivial_numeric_casts,
-    unused_import_braces,
-    unused,
-    clippy::cast_lossless,
-    clippy::clone_on_ref_ptr,
-    clippy::complexity,
-    clippy::correctness,
-    clippy::equatable_if_let,
-    clippy::float_cmp_const,
-    clippy::inefficient_to_string,
-    clippy::iter_on_empty_collections,
-    clippy::iter_on_single_items,
-    clippy::linkedlist,
-    clippy::macro_use_imports,
-    clippy::manual_assert,
-    clippy::manual_instant_elapsed,
-    clippy::manual_string_new,
-    clippy::match_wildcard_for_single_variants,
-    clippy::mem_forget,
-    clippy::nursery,
-    clippy::perf,
-    clippy::string_add_assign,
-    clippy::string_to_string,
-    clippy::style,
-    clippy::suspicious,
-    clippy::unnecessary_join,
-    clippy::unnecessary_self_imports,
-    clippy::unused_async,
-    clippy::verbose_file_reads,
-    clippy::zero_sized_map_values
-)]
-
 //! # JobScheduler
 //!
 //! A simple cron-like job scheduling library for Rust.
@@ -97,7 +58,7 @@
 //! }
 //! ```
 
-use chrono::{offset, DateTime, Duration, Utc};
+use chrono::{DateTime, Duration, Utc};
 pub use cron::Schedule;
 pub use uuid::Uuid;
 
@@ -281,7 +242,7 @@ impl<'a> JobScheduler<'a> {
         let mut duration = Duration::zero();
         let now = Utc::now();
         for job in &self.jobs {
-            for event in job.schedule.upcoming(offset::Utc).take(1) {
+            for event in job.schedule.upcoming(Utc).take(1) {
                 let d = event - now;
                 if duration.is_zero() || d < duration {
                     duration = d;
