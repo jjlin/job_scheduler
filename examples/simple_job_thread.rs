@@ -1,6 +1,5 @@
 use core::time::Duration;
 use job_scheduler_ng::{Job, JobScheduler};
-use std::time::Instant;
 
 fn main() {
     const WAIT_SECONDS: u64 = 40;
@@ -15,19 +14,19 @@ fn main() {
         log("I get executed every 4 seconds!");
     }));
 
+    std::thread::Builder::new()
+        .name(String::from("job-scheduler"))
+        .spawn(move || {
+            log("Starting loop within thread");
+            loop {
+                sched.tick();
+                std::thread::sleep(Duration::from_millis(500));
+            }
+        })
+        .expect("Error spawning job-scheduler thread");
+
     log(&format!("Run for about {WAIT_SECONDS} seconds!"));
-    log("Starting loop");
-    let start = Instant::now();
-    loop {
-        sched.tick();
-
-        std::thread::sleep(Duration::from_millis(500));
-
-        // Check if we have waited long enough
-        if start.elapsed().as_secs() >= WAIT_SECONDS {
-            break;
-        }
-    }
+    std::thread::sleep(Duration::from_secs(WAIT_SECONDS));
     log("Finished. Goodby!");
     std::process::exit(0);
 }

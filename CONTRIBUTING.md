@@ -1,4 +1,4 @@
-# Contributing to JobScheduler
+# Contributing to JobSchedulerNg
 
 We welcome contribution from everyone. Here are the guidelines if you are
 thinking of helping us:
@@ -37,12 +37,10 @@ terms or conditions.
 ## Conduct
 
 We follow the [Rust Code of Conduct](https://www.rust-lang.org/conduct.html).
-For escalation or moderation issues, please contact Lori (git at loriholden dot
-com) instead of the Rust moderation team.
+For escalation or moderation issues, please contact BlackDex via an issue instead of the Rust moderation team.
 
 ## Communication
 
 Beyond opening tickets on the
-[job_scheduler](https://github.com/lholden/job_scheduler) project, I can be
-found as `lholden` on [`irc.mozilla.org`](https://wiki.mozilla.org/IRC) and I
-frequent the `#rust` channel.
+[job_scheduler_ng](https://github.com/BlackDex/job_scheduler) project, I can be
+found as `BlackDex` on Matrix and IRC and I frequent the `#rust` channel.

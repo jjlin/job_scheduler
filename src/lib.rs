@@ -4,11 +4,11 @@
 //!
 //! ## Usage
 //!
-//! Be sure to add the job_scheduler crate to your `Cargo.toml`:
+//! Be sure to add the job_scheduler_ng crate to your `Cargo.toml`:
 //!
 //! ```toml
 //! [dependencies]
-//! job_scheduler = "*"
+//! job_scheduler_ng = "*"
 //! ```
 //!
 //! Creating a schedule for a job is done using the `FromStr` impl for the
@@ -37,37 +37,35 @@
 //! A simple usage example:
 //!
 //! ```rust,ignore
-//! extern crate job_scheduler;
-//! use job_scheduler::{JobScheduler, Job};
-//! use std::time::Duration;
+//! use job_scheduler_ng::{JobScheduler, Job};
+//! use core::time::Duration;
 //!
 //! fn main() {
 //!     let mut sched = JobScheduler::new();
 //!
-//!     sched.add(Job::new("1/10 * * * * *".parse().unwrap(), || {
-//!         println!("I get executed every 10 seconds!");
+//!     sched.add(Job::new("0/10 * * * * *".parse().unwrap(), || {
+//!         println!("I get executed every 10th second!");
+//!     }));
+//!
+//!     sched.add(Job::new("*/4 * * * * *".parse().unwrap(), || {
+//!         println!("I get executed every 4 seconds!");
 //!     }));
 //!
 //!     loop {
 //!         sched.tick();
-//!
 //!         std::thread::sleep(Duration::from_millis(500));
 //!     }
 //! }
 //! ```
 
-extern crate chrono;
-extern crate cron;
-extern crate uuid;
-
-use chrono::{offset, DateTime, Duration, Utc};
+use chrono::{DateTime, Duration, Utc};
 pub use cron::Schedule;
 pub use uuid::Uuid;
 
 /// A schedulable `Job`.
 pub struct Job<'a> {
     schedule: Schedule,
-    run: Box<(FnMut() -> ()) + 'a>,
+    run: Box<dyn (FnMut()) + Send + 'a>,
     last_tick: Option<DateTime<Utc>>,
     limit_missed_runs: usize,
     job_id: Uuid,
@@ -82,12 +80,12 @@ impl<'a> Job<'a> {
     /// let s: Schedule = "0 15 6,8,10 * Mar,Jun Fri 2017".into().unwrap();
     /// Job::new(s, || println!("I have a complex schedule...") );
     /// ```
-    pub fn new<T>(schedule: Schedule, run: T) -> Job<'a>
+    #[inline]
+    pub fn new<T>(schedule: Schedule, run: T) -> Self
     where
-        T: 'a,
-        T: FnMut() -> (),
+        T: FnMut() + Send + 'a,
     {
-        Job {
+        Self {
             schedule,
             run: Box::new(run),
             last_tick: None,
@@ -133,6 +131,7 @@ impl<'a> Job<'a> {
     /// });
     /// job.limit_missed_runs(99);
     /// ```
+    #[inline]
     pub fn limit_missed_runs(&mut self, limit: usize) {
         self.limit_missed_runs = limit;
     }
@@ -145,6 +144,7 @@ impl<'a> Job<'a> {
     /// });
     /// job.last_tick(Some(Utc::now()));
     /// ```
+    #[inline]
     pub fn last_tick(&mut self, last_tick: Option<DateTime<Utc>>) {
         self.last_tick = last_tick;
     }
@@ -158,8 +158,10 @@ pub struct JobScheduler<'a> {
 
 impl<'a> JobScheduler<'a> {
     /// Create a new `JobScheduler`.
-    pub fn new() -> JobScheduler<'a> {
-        JobScheduler { jobs: Vec::new() }
+    #[inline]
+    #[must_use]
+    pub const fn new() -> Self {
+        Self { jobs: Vec::new() }
     }
 
     /// Add a job to the `JobScheduler`
@@ -170,6 +172,7 @@ impl<'a> JobScheduler<'a> {
     ///     println!("I get executed every 10 seconds!");
     /// }));
     /// ```
+    #[inline]
     pub fn add(&mut self, job: Job<'a>) -> Uuid {
         let job_id = job.job_id;
         self.jobs.push(job);
@@ -186,6 +189,7 @@ impl<'a> JobScheduler<'a> {
     /// }));
     /// sched.remove(job_id);
     /// ```
+    #[inline]
     pub fn remove(&mut self, job_id: Uuid) -> bool {
         let mut found_index = None;
         for (i, job) in self.jobs.iter().enumerate() {
@@ -195,8 +199,8 @@ impl<'a> JobScheduler<'a> {
             }
         }
 
-        if found_index.is_some() {
-            self.jobs.remove(found_index.unwrap());
+        if let Some(index) = found_index {
+            self.jobs.remove(index);
         }
 
         found_index.is_some()
@@ -212,8 +216,9 @@ impl<'a> JobScheduler<'a> {
     ///     std::thread::sleep(Duration::from_millis(500));
     /// }
     /// ```
+    #[inline]
     pub fn tick(&mut self) {
-        for mut job in &mut self.jobs {
+        for job in &mut self.jobs {
             job.tick();
         }
     }
@@ -228,15 +233,16 @@ impl<'a> JobScheduler<'a> {
     ///     std::thread::sleep(sched.time_till_next_job());
     /// }
     /// ```
-    pub fn time_till_next_job(&self) -> std::time::Duration {
+    #[inline]
+    pub fn time_till_next_job(&self) -> core::time::Duration {
         if self.jobs.is_empty() {
             // Take a guess if there are no jobs.
-            return std::time::Duration::from_millis(500);
+            return core::time::Duration::from_millis(500);
         }
         let mut duration = Duration::zero();
         let now = Utc::now();
-        for job in self.jobs.iter() {
-            for event in job.schedule.upcoming(offset::Utc).take(1) {
+        for job in &self.jobs {
+            for event in job.schedule.upcoming(Utc).take(1) {
                 let d = event - now;
                 if duration.is_zero() || d < duration {
                     duration = d;
